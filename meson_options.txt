@@ -1,0 +1,84 @@
+
+option(
+    'enable_astc',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into ASTC (mobile, Intel devices, hopefully all desktop GPUs one day)'
+)
+
+option(
+    'enable_atc',
+    type : 'boolean',
+    value : false,
+    description : 'Enable transcoding into ATC (mobile, Adreno devices, this is a niche format)'
+)
+
+option(
+    'enable_bc7',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into BC7 (desktop, some mobile devices)'
+)
+
+option(
+    'enable_dxt1',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into DXT1'
+)
+
+option(
+    'enable_dxt5a',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into DXT5A'
+)
+
+option(
+    'enable_etc2_eac_a8',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into ETC2_EAC_A8'
+)
+
+option(
+    'enable_etc2_eac_rg11',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into ETC2_EAC_RG11 and ETC2_EAC_R11'
+)
+
+option(
+    'enable_etc2_eac_rg11',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into ETC2_EAC_RG11 and ETC2_EAC_R11'
+)
+
+option(
+    'enable_fxt1',
+    type : 'boolean',
+    value : false,
+    description : 'Enable transcoding into FXT1 (desktop, Intel devices, this is a super obscure format)'
+)
+
+option(
+    'enable_pvrtc1',
+    type : 'boolean',
+    value : false,
+    description : 'Enable transcoding into PVRTC1 (mobile, PowerVR devices, pow2 textures only)'
+)
+
+option(
+    'enable_pvrtc2',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding into PVRTC2 (mobile, PowerVR devices)'
+)
+
+option(
+    'enable_uastc',
+    type : 'boolean',
+    value : true,
+    description : 'Enable transcoding of UASTC source files'
+)
