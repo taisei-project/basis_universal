@@ -248,16 +248,16 @@ typedef struct basist_transcode_level_params_s {
 #endif
 
 BASIST_API uint32_t basist_get_bytes_per_block_or_pixel(basist_texture_format fmt);
-BASIST_API const char *basis_get_format_name(basist_texture_format fmt);
-BASIST_API bool basist_format_has_alpha(basist_texture_format fmt);
+BASIST_API const char *basist_get_format_name(basist_texture_format fmt);
 BASIST_API bool basist_format_has_alpha(basist_texture_format fmt);
 BASIST_API basisu_texture_format basist_get_basisu_texture_format(basist_texture_format fmt);
-BASIST_API const char *basis_get_texture_type_name(basist_texture_type tex_type);
-BASIST_API bool basis_transcoder_format_is_uncompressed(basist_texture_format tex_type);
-BASIST_API uint32_t basis_get_uncompressed_bytes_per_pixel(basist_texture_format fmt);
-BASIST_API uint32_t basis_get_block_width(basist_texture_format tex_type);
-BASIST_API uint32_t basis_get_block_height(basist_texture_format tex_type);
-BASIST_API bool basis_is_format_supported(basist_texture_format tex_type, basist_source_format fmt);
+BASIST_API const char *basist_get_texture_type_name(basist_texture_type tex_type);
+BASIST_API bool basist_is_format_supported(basist_texture_format fmt, basist_source_format src_fmt);
+BASIST_API bool basist_is_format_uncompressed(basist_texture_format fmt);
+BASIST_API uint32_t basist_get_uncompressed_bytes_per_pixel(basist_texture_format fmt);
+BASIST_API uint32_t basist_get_block_width(basist_texture_format fmt);
+BASIST_API uint32_t basist_get_block_height(basist_texture_format fmt);
+
 BASIST_API basist_transcoder *basist_transcoder_create(void);
 BASIST_API void basist_transcoder_destroy(basist_transcoder *tc);
 BASIST_API void basist_transcoder_set_data(basist_transcoder *tc, basist_data data);

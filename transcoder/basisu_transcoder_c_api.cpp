@@ -145,6 +145,51 @@ struct basist_transcoder_s {
 
 extern "C" {
 
+uint32_t basist_get_bytes_per_block_or_pixel(basist_texture_format fmt) {
+    return basist::basis_get_bytes_per_block_or_pixel(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
+const char *basist_get_format_name(basist_texture_format fmt) {
+    return basist::basis_get_format_name(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
+bool basist_format_has_alpha(basist_texture_format fmt) {
+    return basist::basis_transcoder_format_has_alpha(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
+basisu_texture_format basist_get_basisu_texture_format(basist_texture_format fmt) {
+    return static_cast<basisu_texture_format>(
+        basist::basis_get_basisu_texture_format(static_cast<basist::transcoder_texture_format>(fmt))
+    );
+}
+
+const char *basist_get_texture_type_name(basist_texture_type tex_type) {
+    return basist::basis_get_texture_type_name(static_cast<basist::basis_texture_type>(tex_type));
+}
+
+bool basist_is_format_supported(basist_texture_format fmt, basist_source_format src_fmt) {
+    return basist::basis_is_format_supported(
+        static_cast<basist::transcoder_texture_format>(fmt),
+        static_cast<basist::basis_tex_format>(src_fmt)
+    );
+}
+
+bool basist_is_format_uncompressed(basist_texture_format tex_type) {
+    return basist::basis_transcoder_format_is_uncompressed(static_cast<basist::transcoder_texture_format>(tex_type));
+}
+
+uint32_t basist_get_uncompressed_bytes_per_pixel(basist_texture_format fmt) {
+    return basist::basis_get_uncompressed_bytes_per_pixel(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
+uint32_t basist_get_block_width(basist_texture_format fmt) {
+    return basist::basis_get_block_width(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
+uint32_t basist_get_block_height(basist_texture_format fmt) {
+    return basist::basis_get_block_height(static_cast<basist::transcoder_texture_format>(fmt));
+}
+
 basist_transcoder *basist_transcoder_create(void) {
     G.init();
     auto tc = new basist_transcoder;
