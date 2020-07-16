@@ -127,11 +127,11 @@ ASSERT_ENUM(BASIST_DECODE_HIGH_QUALITY, basist::cDecodeFlagsHighQuality);
 // END assertions
 
 static struct G {
-    static std::once_flag init_flag;
-    static std::unique_ptr<basist::etc1_global_selector_codebook> sel_codebook;
+    std::once_flag init_flag;
+    std::unique_ptr<basist::etc1_global_selector_codebook> sel_codebook;
 
-    static void init() {
-        std::call_once(init_flag, []() {
+    void init() {
+        std::call_once(init_flag, [this]() {
             basist::basisu_transcoder_init();
             sel_codebook = std::make_unique<basist::etc1_global_selector_codebook>(basist::g_global_selector_cb_size, basist::g_global_selector_cb);
         });
