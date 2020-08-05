@@ -2,7 +2,18 @@ project('basisu', 'c', 'cpp',
     version : '1.12',
     meson_version : '>=0.48.0',
     license : 'Apache-2.0',
+    default_options : [
+        'cpp_std=c++14',
+        'cpp_eh=none',
+        'cpp_rtti=false',
+    ]
 )
+
+cpp_options = [
+    'cpp_std=c++14',
+    'cpp_eh=none',
+    'cpp_rtti=false',
+]
 
 native_options = [
     'b_lto=false',
@@ -67,7 +78,7 @@ basisu_native = executable('basisu', basisu_src,
     gnu_symbol_visibility : 'hidden',
     install : false,
     native : true,
-#     override_options : native_options,
+#     override_options : native_options + cpp_options,
     dependencies : basisu_deps,
 )
 
@@ -171,6 +182,7 @@ basisu_transcoder = static_library('basisu_transcoder', basisu_transcoder_src,
     gnu_symbol_visibility : 'hidden',
     install : false,
     dependencies : dep_m,
+    override_options : cpp_options,
 )
 
 basisu_transcoder_dep = declare_dependency(
