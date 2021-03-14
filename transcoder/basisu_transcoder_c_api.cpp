@@ -115,6 +115,10 @@ STATIC_ASSERT(offsetof(basist_image_level_info, num_blocks_x) == offsetof(basist
 STATIC_ASSERT(offsetof(basist_image_level_info, num_blocks_y) == offsetof(basist::basisu_image_level_info, m_num_blocks_y));
 STATIC_ASSERT(offsetof(basist_image_level_info, total_blocks) == offsetof(basist::basisu_image_level_info, m_total_blocks));
 STATIC_ASSERT(offsetof(basist_image_level_info, first_slice_index) == offsetof(basist::basisu_image_level_info, m_first_slice_index));
+STATIC_ASSERT(offsetof(basist_image_level_info, rgb_file_ofs) == offsetof(basist::basisu_image_level_info, m_rgb_file_ofs));
+STATIC_ASSERT(offsetof(basist_image_level_info, rgb_file_len) == offsetof(basist::basisu_image_level_info, m_rgb_file_len));
+STATIC_ASSERT(offsetof(basist_image_level_info, alpha_file_ofs) == offsetof(basist::basisu_image_level_info, m_alpha_file_ofs));
+STATIC_ASSERT(offsetof(basist_image_level_info, alpha_file_len) == offsetof(basist::basisu_image_level_info, m_alpha_file_len));
 STATIC_ASSERT(offsetof(basist_image_level_info, alpha_flag) == offsetof(basist::basisu_image_level_info, m_alpha_flag));
 STATIC_ASSERT(offsetof(basist_image_level_info, iframe_flag) == offsetof(basist::basisu_image_level_info, m_iframe_flag));
 

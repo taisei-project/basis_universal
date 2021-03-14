@@ -1,5 +1,5 @@
 project('basisu', 'c', 'cpp',
-    version : '1.12',
+    version : '1.13',
     meson_version : '>=0.48.0',
     license : 'Apache-2.0',
     default_options : [
@@ -45,35 +45,54 @@ basisu_cflags = cc.get_supported_arguments(
     '-fno-strict-aliasing',
 )
 
+encoder_cflags = cc.get_supported_arguments(
+    '-mno-avx',
+    '-mno-avx2',
+    '-mno-avx512f',
+    '-mno-sse4.2',
+)
+
+if cc.has_argument('-msse4.1')
+    encoder_cflags += [
+        '-msse4.1',
+        '-DBASISU_SUPPORT_SSE=1',
+    ]
+else
+    encoder_cflags += [
+        '-DBASISU_SUPPORT_SSE=0',
+    ]
+endif
+
 basisu_transcoder_src = files(
     'transcoder/basisu_transcoder.cpp',
     'transcoder/basisu_transcoder_c_api.cpp',
 )
 
 basisu_src = files(
-    'apg_bmp.c',
-    'basisu_astc_decomp.cpp',
-    'basisu_basis_file.cpp',
-    'basisu_bc7enc.cpp',
-    'basisu_comp.cpp',
-    'basisu_enc.cpp',
-    'basisu_etc.cpp',
-    'basisu_frontend.cpp',
-    'basisu_global_selector_palette_helpers.cpp',
-    'basisu_gpu_texture.cpp',
-    'basisu_pvrtc1_4.cpp',
-    'basisu_resample_filters.cpp',
-    'basisu_resampler.cpp',
-    'basisu_ssim.cpp',
     'basisu_tool.cpp',
-    'basisu_uastc_enc.cpp',
-    'jpgd.cpp',
-    'lodepng.cpp',
-    'basisu_backend.cpp',
+    'encoder/apg_bmp.c',
+    'encoder/basisu_astc_decomp.cpp',
+    'encoder/basisu_backend.cpp',
+    'encoder/basisu_basis_file.cpp',
+    'encoder/basisu_bc7enc.cpp',
+    'encoder/basisu_comp.cpp',
+    'encoder/basisu_enc.cpp',
+    'encoder/basisu_etc.cpp',
+    'encoder/basisu_frontend.cpp',
+    'encoder/basisu_global_selector_palette_helpers.cpp',
+    'encoder/basisu_gpu_texture.cpp',
+    'encoder/basisu_kernels_sse.cpp',
+    'encoder/basisu_pvrtc1_4.cpp',
+    'encoder/basisu_resample_filters.cpp',
+    'encoder/basisu_resampler.cpp',
+    'encoder/basisu_ssim.cpp',
+    'encoder/basisu_uastc_enc.cpp',
+    'encoder/jpgd.cpp',
+    'encoder/lodepng.cpp',
 ) + basisu_transcoder_src
 
 basisu_native = executable('basisu', basisu_src,
-    cpp_args : basisu_cflags,
+    cpp_args : basisu_cflags + encoder_cflags,
     build_by_default : false,
     gnu_symbol_visibility : 'hidden',
     install : false,
@@ -82,16 +101,16 @@ basisu_native = executable('basisu', basisu_src,
     dependencies : basisu_deps,
 )
 
-transcoder_opts = []
+transcoder_cflags = []
 
 if host_machine.endian() == 'big'
-    transcoder_opts += '-DBASISD_IS_BIG_ENDIAN=1'
+    transcoder_cflags += '-DBASISD_IS_BIG_ENDIAN=1'
 else
-    transcoder_opts += '-DBASISD_IS_BIG_ENDIAN=0'
+    transcoder_cflags += '-DBASISD_IS_BIG_ENDIAN=0'
 endif
 
 # Let's be safe
-transcoder_opts += '-DBASISD_USE_UNALIGNED_WORD_READS=0'
+transcoder_cflags += '-DBASISD_USE_UNALIGNED_WORD_READS=0'
 
 enable_astc = get_option('enable_astc')
 enable_atc = get_option('enable_atc')
@@ -109,75 +128,75 @@ enable_atc = enable_atc or enable_pvrtc2
 enable_dxt5a = enable_dxt5a or enable_atc
 
 if enable_astc
-    transcoder_opts += '-DBASISD_SUPPORT_ASTC=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_ASTC=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_ASTC=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_ASTC=0'
 endif
 
 if enable_atc
-    transcoder_opts += '-DBASISD_SUPPORT_ATC=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_ATC=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_ATC=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_ATC=0'
 endif
 
 if enable_bc7
-    transcoder_opts += '-DBASISD_SUPPORT_BC7=1'
-    transcoder_opts += '-DBASISD_SUPPORT_BC7_MODE5=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_BC7=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_BC7_MODE5=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_BC7=0'
-    transcoder_opts += '-DBASISD_SUPPORT_BC7_MODE5=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_BC7=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_BC7_MODE5=0'
 endif
 
 if enable_dxt1
-    transcoder_opts += '-DBASISD_SUPPORT_DXT1=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_DXT1=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_DXT1=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_DXT1=0'
 endif
 
 if enable_dxt5a
-    transcoder_opts += '-DBASISD_SUPPORT_DXT5A=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_DXT5A=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_DXT5A=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_DXT5A=0'
 endif
 
 if enable_etc2_eac_a8
-    transcoder_opts += '-DBASISD_SUPPORT_ETC2_EAC_A8=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_ETC2_EAC_A8=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_ETC2_EAC_A8=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_ETC2_EAC_A8=0'
 endif
 
 if enable_etc2_eac_rg11
-    transcoder_opts += '-DBASISD_SUPPORT_ETC2_EAC_RG11=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_ETC2_EAC_RG11=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_ETC2_EAC_RG11=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_ETC2_EAC_RG11=0'
 endif
 
 if enable_fxt1
-    transcoder_opts += '-DBASISD_SUPPORT_FXT1=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_FXT1=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_FXT1=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_FXT1=0'
 endif
 
 if enable_pvrtc1
-    transcoder_opts += '-DBASISD_SUPPORT_PVRTC1=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_PVRTC1=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_PVRTC1=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_PVRTC1=0'
 endif
 
 if enable_pvrtc2
-    transcoder_opts += '-DBASISD_SUPPORT_PVRTC2=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_PVRTC2=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_PVRTC2=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_PVRTC2=0'
 endif
 
 if enable_uastc
-    transcoder_opts += '-DBASISD_SUPPORT_UASTC=1'
+    transcoder_cflags += '-DBASISD_SUPPORT_UASTC=1'
 else
-    transcoder_opts += '-DBASISD_SUPPORT_UASTC=0'
+    transcoder_cflags += '-DBASISD_SUPPORT_UASTC=0'
 endif
 
 basisu_transcoder = static_library('basisu_transcoder', basisu_transcoder_src,
-    cpp_args : basisu_cflags + transcoder_opts,
+    cpp_args : basisu_cflags + transcoder_cflags,
     build_by_default : false,
     gnu_symbol_visibility : 'hidden',
     install : false,
@@ -189,5 +208,5 @@ basisu_transcoder_dep = declare_dependency(
     link_with : basisu_transcoder,
     include_directories : include_directories('transcoder'),
     version : meson.project_version(),
-    compile_args : transcoder_opts,
+    compile_args : transcoder_cflags,
 )

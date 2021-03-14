@@ -193,6 +193,11 @@ typedef struct basist_image_level_info_s {
 
     uint32_t first_slice_index;
 
+    uint32_t rgb_file_ofs;
+    uint32_t rgb_file_len;
+    uint32_t alpha_file_ofs;
+    uint32_t alpha_file_len;
+
     bool alpha_flag;
     bool iframe_flag;
 } basist_image_level_info;
