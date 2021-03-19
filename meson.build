@@ -39,6 +39,7 @@ basisu_cflags = cc.get_supported_arguments(
     '-Wno-misleading-indentation',
     '-Wno-sign-compare',
     '-Wno-unused-but-set-variable',
+    '-Wno-unused-value',
     '-Wno-unused-variable',
     '-fno-exceptions',
     '-fno-rtti',
